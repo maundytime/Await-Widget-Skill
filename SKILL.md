@@ -3,13 +3,13 @@ name: await-widget
 description: Create or modify Await widgets in TSX using the custom SwiftUI-style DSL, native bridge APIs, modifiers, timelines, intents, and @panel controls. Use when the user asks to build, edit, or scaffold an Await widget.
 license: MIT
 version: "1.0.0"
-last_updated: "2026-04-26"
+last_updated: "2026-04-27"
 user_invocable: true
 ---
 
 # Await Widget
 
-This package is both an installable agent skill and a cloneable widget template. Treat the `.d.ts` files as the public contract.
+This package is both an installable agent skill and a cloneable widget template. Treat the `@await-widget/runtime` declarations as the public contract.
 
 `assets/` is the template project root.
 
@@ -18,13 +18,13 @@ This package is both an installable agent skill and a cloneable widget template.
 1. Locate the target widget.
    - If the user gives a file, edit that file.
    - If the user is working in a fresh clone of this repo, edit the `index.tsx` inside the desired template directory under `assets/`.
-   - If the user asks for a new widget project, copy `assets/package.json`, `assets/package-lock.json`, `assets/tsconfig.json`, `assets/runtime/`, `assets/types/`, and the desired template directory under `assets/` into the target project before editing.
-2. Read only the declarations needed for the task:
-   - `assets/runtime/await.d.ts`: importable components and JSX entry.
-   - `assets/runtime/bridge.d.ts`: global native bridge APIs and `Await.define` types.
-   - `assets/types/prop.d.ts`: component props and modifier types.
-   - `assets/types/global.d.ts`: global types.
-   - `assets/types/jsx.d.ts`: JSX constraints.
+   - If the user asks for a new widget project, copy `assets/package.json`, `assets/tsconfig.json`, and the desired template directory under `assets/` into the target project before editing.
+2. Ensure dependencies are available, running `npm install` in the widget project if `node_modules/@await-widget/runtime` is missing. Then read only the `@await-widget/runtime` declarations needed for the task:
+   - `node_modules/@await-widget/runtime/runtime/await.d.ts`: importable components and JSX entry.
+   - `node_modules/@await-widget/runtime/runtime/bridge.d.ts`: global native bridge APIs and `Await.define` types.
+   - `node_modules/@await-widget/runtime/types/prop.d.ts`: component props and modifier types.
+   - `node_modules/@await-widget/runtime/types/global.d.ts`: global types.
+   - `node_modules/@await-widget/runtime/types/jsx.d.ts`: JSX constraints.
 3. Implement the widget.
 4. Run `npm test` in the widget project directory or `assets/` for a fresh clone. If dependencies are missing, run `npm install` first.
 
@@ -34,7 +34,7 @@ This package is both an installable agent skill and a cloneable widget template.
 - Do not write native HTML tags. `JSX.IntrinsicElements` is `never`, so `<div>` and `<span>` are invalid.
 - Register widgets with `Await.define({...})`.
 - Express view styling through props and modifiers. Do not use CSS, `style` objects, React hooks, or React state.
-- If a component, prop, modifier, or native bridge API is not in the `.d.ts` files, treat it as unavailable.
+- If a component, prop, modifier, or native bridge API is not in the `@await-widget/runtime` declarations, treat it as unavailable.
 - Widgets run inside a widget environment, not a full app page. Keep the view tree and timeline small by default.
 - Design permission-related behavior as "already authorized by the host" or "currently unavailable". Do not put first-run authorization flows inside the widget.
 - When generating a widget, also generate a small `@panel` surface by default for the main tunable values unless the user explicitly says not to.
@@ -125,7 +125,7 @@ const app = Await.define({
 
 ## Decision Order
 
-1. Check `assets/runtime/await.d.ts` to see whether the component exists.
-2. Check `assets/types/prop.d.ts` to see whether the prop or modifier is valid.
-3. Check `assets/runtime/bridge.d.ts` to see whether the native bridge API exists.
-4. If it is not in the `.d.ts` files, treat it as unavailable.
+1. Check `node_modules/@await-widget/runtime/runtime/await.d.ts` to see whether the component exists.
+2. Check `node_modules/@await-widget/runtime/types/prop.d.ts` to see whether the prop or modifier is valid.
+3. Check `node_modules/@await-widget/runtime/runtime/bridge.d.ts` to see whether the native bridge API exists.
+4. If it is not in the `@await-widget/runtime` declarations, treat it as unavailable.

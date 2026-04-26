@@ -77,4 +77,4 @@ This policy may be updated when Await's behavior changes. The date at the top sh
 
 For privacy questions, open an issue at:
 
-https://github.com/maundytime/Await-Widget/issues
+https://github.com/await-widget/skills/issues

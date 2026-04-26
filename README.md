@@ -1,6 +1,6 @@
 # Await - Widget Workshop
 
-Await is a widget workshop for people who like crafting small things. 
+Await is a widget workshop for people who like crafting small things.
 
 Start from templates or from scratch — arrange layouts, try out interactions, and tune the style with panels. Turn your ideas into home screen widgets, with a bit of your own taste.
 
@@ -14,7 +14,7 @@ This repository provides the public Await Widget and widget template used to cre
 - [Privacy Policy](PRIVACY.md)
 - [Skill Instructions](SKILL.md)
 - [Template Project](assets/)
-- [Feedback](https://github.com/maundytime/Await-Widget/issues)
+- [Feedback](https://github.com/await-widget/skills/issues)
 
 ## Await Widget
 
@@ -26,26 +26,66 @@ Install via [`npx skills`](https://github.com/vercel-labs/skills), which works a
 
 ```bash
 # Project-scoped (committed with your project, shared with team)
-npx skills add maundytime/Await-Widget
+npx skills add await-widget/skills
 
 # User-scoped (available across all your projects)
-npx skills add maundytime/Await-Widget -g
+npx skills add await-widget/skills -g
 
 # Install only to a specific agent
-npx skills add maundytime/Await-Widget -a claude-code -g
+npx skills add await-widget/skills -a claude-code -g
 ```
 
 Restart your agent after installing.
 
-The install bundles the full template into your agent's skills directory: `SKILL.md`, type definitions in `assets/runtime/` and `assets/types/`, starter templates (`Minimal`, `Gif`, `Panels`), and Codex's `agents/openai.yaml`. The agent reads `SKILL.md` first, then the `.d.ts` files as the public contract. The skill registers as `await-widget` in your agent's skill list.
+The install bundles the widget instructions and template into your agent's skills directory. The skill registers as `await-widget` in your agent's skill list, and widget projects use the published `@await-widget/runtime` package for TypeScript declarations.
 
 See [vercel-labs/skills](https://github.com/vercel-labs/skills) for the full list of supported agents and CLI options.
+
+## TypeScript Declarations
+
+Widget projects should install the Await runtime declarations from npm:
+
+```bash
+npm install -D @await-widget/runtime typescript
+```
+
+Configure TypeScript to use the Await JSX runtime and global bridge declarations:
+
+```json
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "await",
+    "types": ["@await-widget/runtime"]
+  }
+}
+```
+
+Widget source continues to import components from `await`:
+
+```tsx
+import { Text, ZStack } from "await";
+
+function widget() {
+  return (
+    <ZStack>
+      <Text value="Hello, World!" />
+    </ZStack>
+  );
+}
+
+Await.define({
+  widget,
+});
+```
+
+`@await-widget/runtime` provides the `await` module, `await/jsx-runtime`, global Await bridge APIs such as `Await`, `AwaitStore`, and `AwaitNetwork`, and JSX constraints for Await widgets.
 
 ## Clone
 
 ```bash
-git clone https://github.com/maundytime/Await-Widget.git
-cd Await-Widget
+git clone https://github.com/await-widget/skills.git
+cd skills
 cd assets
 npm install
 npm test
@@ -60,3 +100,7 @@ Then implement or modify the target widget based on my request.
 
 `SKILL.md` is the main instruction file for agents in this repo.
 `assets/` is the template project root.
+
+## License
+
+MIT
