@@ -1,4 +1,4 @@
-import {Color, Text, ZStack} from 'await';
+import {Button, Color, Text, ZStack} from 'await';
 
 // @panel
 const text = 'Hello, World!';
@@ -13,20 +13,33 @@ const background = '333';
 // @panel
 const showBackground = true;
 
-function widget() {
+function widget({value, family}:WidgetEntry<{value: string}>) {
 	return (
 		<ZStack>
 			<Color value={showBackground ? background : ''}/>
-			<Text
+			<Button intent={app.tap(1)}>
+				<Text
 				value={text}
 				fontSize={fontSize}
 				fontDesign={fontDesign}
 				foreground={foreground}
 			/>
+			</Button>
 		</ZStack>
 	);
 }
 
-Await.define({
+function widgetTimeline() {
+	return {entries:[
+		{date: new Date(), value: 'Hello, World!'},
+	]};
+}
+
+const app = Await.define({
 	widget,
+	widgetTimeline,
+	widgetIntents: {
+		tap: (para1: number, para2?: number) => {
+		},
+	},	
 });
