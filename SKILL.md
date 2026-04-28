@@ -20,8 +20,8 @@ This package is both an installable agent skill and a cloneable widget template.
    - If the user is working in a fresh clone of this repo, edit the `index.tsx` inside the desired template directory under `assets/`.
    - If the user asks for a new widget project, copy `assets/package.json`, `assets/tsconfig.json`, and the desired template directory under `assets/` into the target project before editing.
 2. Ensure dependencies are available, running `npm install` in the widget project if `node_modules/@await-widget/runtime` is missing. Then read only the `@await-widget/runtime` declarations needed for the task:
-   - `node_modules/@await-widget/runtime/runtime/await.d.ts`: importable components and JSX entry.
-   - `node_modules/@await-widget/runtime/runtime/bridge.d.ts`: global native bridge APIs and `Await.define` types.
+   - `node_modules/@await-widget/runtime/types/await.d.ts`: importable components and JSX entry.
+   - `node_modules/@await-widget/runtime/types/bridge.d.ts`: global native bridge APIs and `Await.define` types.
    - `node_modules/@await-widget/runtime/types/prop.d.ts`: component props and modifier types.
    - `node_modules/@await-widget/runtime/types/global.d.ts`: global types.
    - `node_modules/@await-widget/runtime/types/jsx.d.ts`: JSX constraints.
@@ -122,7 +122,7 @@ const app = Await.define({
 
 ## Decision Order
 
-1. Check `node_modules/@await-widget/runtime/runtime/await.d.ts` to see whether the component exists.
+1. Check `node_modules/@await-widget/runtime/types/await.d.ts` to see whether the component exists.
 2. Check `node_modules/@await-widget/runtime/types/prop.d.ts` to see whether the prop or modifier is valid.
-3. Check `node_modules/@await-widget/runtime/runtime/bridge.d.ts` to see whether the native bridge API exists.
+3. Check `node_modules/@await-widget/runtime/types/bridge.d.ts` to see whether the native bridge API exists.
 4. If it is not in the `@await-widget/runtime` declarations, treat it as unavailable.
