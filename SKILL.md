@@ -38,12 +38,21 @@ This package is both an installable agent skill and a cloneable widget template.
 - Widgets run inside a widget environment, not a full app page. Keep the view tree and timeline small by default.
 - Design permission-related behavior as "already authorized by the host" or "currently unavailable". Do not put first-run authorization flows inside the widget.
 - When generating a widget, also generate a small `@panel` surface by default for the main tunable values unless the user explicitly says not to.
+- Modifier order is semantic. Later modifiers wrap earlier modifiers, so `<ZStack background='fff' padding={8}>` creates transparent padding outside the background.
+- For label, tag, or capsule-like blocks, write `padding` before `background` when the background should include the padding area.
+- Check every node that combines `background` and `padding`; do not assume HTML or CSS ordering rules.
+- `id` is a stable identity field. `undefined` children are dropped, and `Fragment` only flattens children.
+
+## Layout Notes
+
+- Use `maxSides` on the root view when it must fill the whole widget.
+- Use `minimumScaleFactor` when text needs to adapt across widget sizes.
+- Visible rounded containers should stay concentric with the widget corner shape. Reduce inner corner radius by the actual inset from the outer rounded container.
 
 ## Panel Comments
 
 - `@panel` is a source comment convention. Put it immediately above the declaration it controls.
 - Value panels only work on top-level `const` declarations, including exported top-level `const` declarations.
-- Function panels work on function declarations and top-level function-valued declarations.
 - For value panels, the initializer must be a literal the panel can rewrite directly: string, number, boolean, or a color(string/number) literal used with `type:'color'`.
 - Do not put `@panel` on `let`, `var`, local variables inside functions, computed initializers, or private implementation details you do not want edited from the panel.
 - If you provide a payload, it must be a JS object literal after `@panel`.
@@ -80,17 +89,26 @@ Await.define({
 ## Timeline
 
 - `widgetTimeline(context)` is optional.
-- It returns `{entries, update?}`.
-- `entries` is an array containing `date`.
+- It returns `{entries, update?}`, where `update` can be a `Date`, `"end"`, or `"never"`.
+- `entries` is an array containing `date` plus optional entry data.
 - If the widget does not need time-driven updates, omit `widgetTimeline`.
-- If the goal is to refresh as fast as the system allows, use `update: new Date()`. Do not hardcode minute intervals below the practical system limit.
+- Prefer a single entry unless the widget needs continuous time-based changes.
+- More entries increase rendering cost. Avoid entries that do not change user-visible output.
+- For continuous changes, cover at least about `15m04s + buffer` of timeline entries.
+- If the goal is to refresh as fast as the system allows, use `update: new Date()`. Do not hardcode minute intervals below the practical system limit(15 minutes 4 seconds ~ 15 minutes 10 seconds).
 
-## Intents And Interaction
+## Intents
 
 - Register interaction functions under `widgetIntents`.
 - Generate `intent` values from the result of `Await.define(...)`.
 - Parameters must be encodable values.
+
+## Animations And Interaction
+
 - If you need continuous movement or interaction transitions, give visual entities stable `id` values.
+- Widget animation duration is capped at 2 seconds, even though iPhone animations are not internally limited the same way.
+- For moving entities, prefer a stable outer shell with `id` and `offset`, with inner content handling insertion or removal `transition`.
+- Do not put `offset` and `transition='scale'` on the same node.
 
 ```tsx
 import {Button, Text} from 'await';
@@ -114,12 +132,17 @@ const app = Await.define({
 });
 ```
 
+## Complexity
+
+- Widget complexity is roughly `entries.length * viewTreeNodeCount`.
+- Avoid timeline entries or view nodes that do not create user-visible value.
+
 ## Data And Capabilities
 
-- Use `AwaitStore` for persistent state.
-- Use `AwaitNetwork.request(...)` for networking. Do not use `fetch`.
-- Use `AwaitFile` when file access is needed.
-- Use `AwaitEnv` when the widget `id` or `tag` is needed.
+- Use AwaitStore to manage persistent state. Widget state should typically come from persistent data or timeline entries. AwaitStore is fast and efficient for normal state reads and writes, making it ideal for storing widget state when necessary.
+- Use AwaitNetwork.request(...) for all networking needs, avoiding fetch.
+- Use AwaitFile for file access, but remember it can only interact with files located within the widget directory. Do not access hidden or parent paths.
+- Use AwaitEnv for retrieving the widget's id, tag, or host. The tag allows a single widget to have multiple versions, with each version maintaining its own database and audio state.
 
 ## Decision Order
 
