@@ -11,14 +11,14 @@ user_invocable: true
 
 This package is both an installable agent skill and a cloneable widget template. Treat the `@await-widget/runtime` declarations as the public contract.
 
-`assets/` is the template project root.
+`examples/` is the template project root.
 
 ## Workflow
 
 1. Locate the target widget.
    - If the user gives a file, edit that file.
-   - If the user is working in a fresh clone of this repo, edit the `index.tsx` inside the desired template directory under `assets/`.
-   - If the user asks for a new widget project, copy `assets/package.json`, `assets/tsconfig.json`, and the desired template directory under `assets/` into the target project before editing.
+   - If the user is working in a fresh clone of this repo, edit the `index.tsx` inside the desired template directory under `examples/`.
+   - If the user asks for a new widget project, copy `examples/package.json`, `examples/tsconfig.json`, and the desired template directory under `examples/` into the target project before editing.
 2. Ensure dependencies are available, running `npm install` in the widget project if `node_modules/@await-widget/runtime` is missing. Then read only the `@await-widget/runtime` declarations needed for the task:
    - `node_modules/@await-widget/runtime/types/await.d.ts`: importable components and JSX entry.
    - `node_modules/@await-widget/runtime/types/bridge.d.ts`: global native bridge APIs and `Await.define` types.
@@ -26,7 +26,7 @@ This package is both an installable agent skill and a cloneable widget template.
    - `node_modules/@await-widget/runtime/types/global.d.ts`: global types.
    - `node_modules/@await-widget/runtime/types/jsx.d.ts`: JSX constraints.
 3. Implement the widget.
-4. Run `npm test` in the widget project directory or `assets/` for a fresh clone. If dependencies are missing, run `npm install` first.
+4. Run `npm test` in the widget project directory or `examples/` for a fresh clone. If dependencies are missing, run `npm install` first.
 
 ## Basic Rules
 

@@ -13,7 +13,7 @@ This repository provides the public Await Widget and widget template used to cre
 - [Download Await](https://apps.apple.com/app/id6755678187)
 - [Privacy Policy](PRIVACY.md)
 - [Skill Instructions](SKILL.md)
-- [Template Project](assets/)
+- [Template Project](examples/)
 - [Feedback](https://github.com/await-widget/skills/issues)
 
 ## Await Widget
@@ -86,7 +86,7 @@ Await.define({
 ```bash
 git clone https://github.com/await-widget/skills.git
 cd skills
-cd assets
+cd examples
 npm install
 npm test
 ```
@@ -99,7 +99,7 @@ Then implement or modify the target widget based on my request.
 ```
 
 `SKILL.md` is the main instruction file for agents in this repo.
-`assets/` is the template project root.
+`examples/` is the template project root.
 
 ## License
 
