@@ -6,7 +6,7 @@ import {
 const name = 'World';
 // @panel
 const showBackground = true;
-// @panel {type:'password}
+// @panel {type:'password'}
 const password = '12345678';
 // @panel {type:'slider',min:8,max:64,step:1}
 const fontSize = 16;
